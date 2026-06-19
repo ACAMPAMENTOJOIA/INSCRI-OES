@@ -1,7 +1,14 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
   return (
     <footer className="footer">
-      <p>Acampamento Jóia - {new Date().getFullYear()}</p>
+      <p>
+        Acampamento Jóia -{' '}
+        <Link to="/login" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>
+          {new Date().getFullYear()}
+        </Link>
+      </p>
       <p style={{ marginTop: '0.5rem' }}>
         <small>
           Informações: Walter Rios:{' '}
