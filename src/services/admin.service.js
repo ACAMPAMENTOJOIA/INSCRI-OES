@@ -132,6 +132,28 @@ export const updatePaymentData = async (id, status, valor) => {
   return true;
 };
 
+export const updateCampData = async (id, data) => {
+  const { error } = await supabase
+    .from('registrations')
+    .update({ 
+      equipe: data.equipe,
+      quarto: data.quarto,
+      conselheiro: data.conselheiro
+    })
+    .eq('id', id);
+  if (error) throw error;
+  return true;
+};
+
+export const updateCantinaBalance = async (id, saldo) => {
+  const { error } = await supabase
+    .from('registrations')
+    .update({ saldo_cantina: saldo })
+    .eq('id', id);
+  if (error) throw error;
+  return true;
+};
+
 function getMockRegistrations() {
   return [{
     id: '1',

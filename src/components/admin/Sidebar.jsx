@@ -1,4 +1,4 @@
-import { LogOut, Users, Calendar, LayoutDashboard, DollarSign } from 'lucide-react';
+import { LogOut, Users, Calendar, LayoutDashboard, DollarSign, Coffee } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,6 +44,13 @@ export default function Sidebar({ activeTab, setActiveTab }) {
         >
           <DollarSign size={20} />
           <span>Financeiro</span>
+        </button>
+        <button 
+          className={`nav-item ${activeTab === 'cantina' ? 'active' : ''}`}
+          onClick={() => setActiveTab('cantina')}
+        >
+          <Coffee size={20} />
+          <span>Cantina</span>
         </button>
         <button className="nav-item logout-btn" onClick={handleLogout}>
           <LogOut size={20} />

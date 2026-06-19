@@ -4,6 +4,7 @@ import RegistrationsTab from '../components/admin/RegistrationsTab';
 import EventsTab from '../components/admin/EventsTab';
 import DashboardTab from '../components/admin/DashboardTab';
 import FinanceTab from '../components/admin/FinanceTab';
+import CantinaTab from '../components/admin/CantinaTab';
 import './Admin.css';
 
 export default function AdminPage() {
@@ -18,6 +19,7 @@ export default function AdminPage() {
         {activeTab === 'inscricoes' && <RegistrationsTab />}
         {activeTab === 'eventos' && <EventsTab />}
         {activeTab === 'financeiro' && <FinanceTab />}
+        {activeTab === 'cantina' && <CantinaTab />}
       </main>
     </div>
   );

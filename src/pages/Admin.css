@@ -309,3 +309,69 @@
   background-color: #ffedd5;
   color: #c2410c;
 }
+
+/* Spreadsheet Styles */
+.spreadsheet-container {
+  overflow-x: auto;
+  border: 1px solid #d1d5db;
+  background: white;
+}
+
+.spreadsheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.spreadsheet-table th, .spreadsheet-table td {
+  border: 1px solid #d1d5db;
+  padding: 0.3rem 0.5rem;
+}
+
+.spreadsheet-table th {
+  background-color: #e5e7eb;
+  color: #374151;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.spreadsheet-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  outline: none;
+}
+
+.spreadsheet-input:focus {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.row-paid {
+  background-color: #22c55e !important;
+  color: white;
+}
+
+.row-paid input {
+  color: white;
+}
+
+.row-paid .status-badge {
+  background-color: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.row-partial {
+  background-color: #fef08a !important;
+}
+
+.row-pending {
+  background-color: #fca5a5 !important;
+}
+
