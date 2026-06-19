@@ -62,15 +62,6 @@ export default function LoginAdmin() {
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
           
-          {/* Bypass for local testing */}
-          <button 
-            type="button" 
-            className="btn btn-secondary" 
-            style={{ width: '100%', marginTop: '1rem' }} 
-            onClick={() => navigate('/admin')}
-          >
-            Acessar Painel (Modo Visualização)
-          </button>
         </form>
       </div>
     </div>

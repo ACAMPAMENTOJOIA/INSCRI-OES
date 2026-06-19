@@ -37,7 +37,7 @@ function App() {
         <Route path="/login" element={!session ? <LoginAdmin /> : <Navigate to="/admin" />} />
         <Route 
           path="/admin" 
-          element={(session || import.meta.env.DEV) ? <AdminPage session={session} /> : <Navigate to="/login" />} 
+          element={session ? <AdminPage session={session} /> : <Navigate to="/login" />} 
         />
       </Routes>
     </BrowserRouter>
