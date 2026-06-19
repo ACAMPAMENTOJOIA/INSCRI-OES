@@ -120,10 +120,13 @@ export const updateEvent = async (id, eventData, coverFile) => {
   return true;
 };
 
-export const updatePaymentStatus = async (id, status) => {
+export const updatePaymentData = async (id, status, valor) => {
   const { error } = await supabase
     .from('registrations')
-    .update({ status_pagamento: status })
+    .update({ 
+      status_pagamento: status,
+      valor_pago: valor
+    })
     .eq('id', id);
   if (error) throw error;
   return true;

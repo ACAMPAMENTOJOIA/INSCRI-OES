@@ -28,9 +28,7 @@ export default function DashboardTab({ setActiveTab }) {
         const price = eventInfo?.price ? parseFloat(eventInfo.price) : 0;
         
         expected += price;
-        if (reg.status_pagamento === 'Pago') {
-          collected += price;
-        }
+        collected += reg.valor_pago ? parseFloat(reg.valor_pago) : 0;
       });
 
       setStats({

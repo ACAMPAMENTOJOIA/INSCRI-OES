@@ -93,3 +93,4 @@ using ( bucket_id = 'event-covers' AND auth.role() = 'authenticated' );
 
 -- 4. Atualizações do Módulo Financeiro (Admin V2)
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS status_pagamento text DEFAULT 'Pendente';
+ALTER TABLE registrations ADD COLUMN IF NOT EXISTS valor_pago numeric(10, 2) DEFAULT 0;

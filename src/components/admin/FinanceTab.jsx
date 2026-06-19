@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Search, CheckCircle, Clock } from 'lucide-react';
-import { fetchAllRegistrations, updatePaymentStatus } from '../../services/admin.service';
+import { Search, Edit3 } from 'lucide-react';
+import { fetchAllRegistrations } from '../../services/admin.service';
+import PaymentModal from './PaymentModal';
 
 export default function FinanceTab() {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedReg, setSelectedReg] = useState(null);
 
   const loadData = async () => {
     const data = await fetchAllRegistrations();
@@ -17,14 +19,15 @@ export default function FinanceTab() {
     loadData();
   }, []);
 
-  const handleTogglePayment = async (id, currentStatus) => {
-    const newStatus = currentStatus === 'Pago' ? 'Pendente' : 'Pago';
-    const success = await updatePaymentStatus(id, newStatus);
-    if (success) {
-      setRegistrations(prev => prev.map(reg => 
-        reg.id === id ? { ...reg, status_pagamento: newStatus } : reg
-      ));
-    }
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+  };
+
+  const handlePaymentSuccess = (newStatus, newVal) => {
+    setRegistrations(prev => prev.map(reg => 
+      reg.id === selectedReg.id ? { ...reg, status_pagamento: newStatus, valor_pago: newVal } : reg
+    ));
+    setSelectedReg(null);
   };
 
   const filteredRegistrations = registrations.filter(reg => 
@@ -69,24 +72,22 @@ export default function FinanceTab() {
                     </td>
                     <td>{reg.events?.title || '-'}</td>
                     <td>
-                      <span className={`status-badge status-${(reg.status_pagamento || 'Pendente').toLowerCase()}`}>
-                        {reg.status_pagamento || 'Pendente'}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                        <span className={`status-badge status-${(reg.status_pagamento || 'Pendente').toLowerCase()}`} style={{ width: 'fit-content' }}>
+                          {reg.status_pagamento || 'Pendente'}
+                        </span>
+                        <small style={{ color: '#666', fontWeight: 'bold' }}>
+                          {formatCurrency(reg.valor_pago || 0)} / {formatCurrency(reg.events?.price || 0)}
+                        </small>
+                      </div>
                     </td>
                     <td>
                       <button 
                         className="btn-small" 
-                        style={{ 
-                          display: 'flex', alignItems: 'center', gap: '0.5rem',
-                          backgroundColor: reg.status_pagamento === 'Pago' ? '#f59e0b' : '#10b981'
-                        }}
-                        onClick={() => handleTogglePayment(reg.id, reg.status_pagamento || 'Pendente')}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#3b82f6' }}
+                        onClick={() => setSelectedReg(reg)}
                       >
-                        {reg.status_pagamento === 'Pago' ? (
-                          <><Clock size={16} /> Marcar Pendente</>
-                        ) : (
-                          <><CheckCircle size={16} /> Dar Baixa (Pago)</>
-                        )}
+                        <Edit3 size={16} /> Atualizar Pagamento
                       </button>
                     </td>
                   </tr>
@@ -101,6 +102,14 @@ export default function FinanceTab() {
           </div>
         )}
       </div>
+      
+      {selectedReg && (
+        <PaymentModal 
+          selectedReg={selectedReg} 
+          onClose={() => setSelectedReg(null)} 
+          onSuccess={handlePaymentSuccess} 
+        />
+      )}
     </>
   );
 }
