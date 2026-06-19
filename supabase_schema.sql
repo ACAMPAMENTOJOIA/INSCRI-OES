@@ -107,3 +107,4 @@ ALTER TABLE registrations ADD COLUMN IF NOT EXISTS equipe text;
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS quarto text;
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS conselheiro text;
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS saldo_cantina numeric(10, 2) DEFAULT 0;
+ALTER TABLE registrations ADD COLUMN IF NOT EXISTS is_cantina_only boolean DEFAULT false;

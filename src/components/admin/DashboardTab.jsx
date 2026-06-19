@@ -23,7 +23,9 @@ export default function DashboardTab({ setActiveTab }) {
       let expected = 0;
       let collected = 0;
 
-      regsData.forEach(reg => {
+      const campRegistrations = regsData.filter(reg => !reg.is_cantina_only);
+
+      campRegistrations.forEach(reg => {
         const eventInfo = eventsData.find(e => e.id === reg.event_id);
         const price = eventInfo?.price ? parseFloat(eventInfo.price) : 0;
         
@@ -32,8 +34,8 @@ export default function DashboardTab({ setActiveTab }) {
       });
 
       setStats({
-        totalRegs: regsData.length,
-        activeEvents: activeEventsCount,
+        totalRegs: campRegistrations.length,
+        activeEvents: eventsData.filter(e => e.active).length,
         expectedRevenue: expected,
         collectedRevenue: collected
       });

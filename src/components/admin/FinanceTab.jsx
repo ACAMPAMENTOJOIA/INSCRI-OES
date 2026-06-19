@@ -55,7 +55,7 @@ export default function FinanceTab() {
   };
 
   const filteredRegistrations = registrations.filter(reg => 
-    reg.nome_completo.toLowerCase().includes(searchTerm.toLowerCase())
+    !reg.is_cantina_only && reg.nome_completo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getRowClass = (status) => {

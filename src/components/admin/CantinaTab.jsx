@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, Minus } from 'lucide-react';
-import { fetchAllRegistrations, updateCantinaBalance } from '../../services/admin.service';
+import { Search, Plus, Minus, UserPlus } from 'lucide-react';
+import { fetchAllRegistrations, updateCantinaBalance, addCantinaGuest } from '../../services/admin.service';
 
 export default function CantinaTab() {
   const [registrations, setRegistrations] = useState([]);
@@ -58,6 +58,20 @@ export default function CantinaTab() {
     }
   };
 
+  const handleAddGuest = async () => {
+    const nome = window.prompt("Digite o nome completo do cliente avulso:");
+    if (!nome || nome.trim() === '') return;
+
+    try {
+      const newGuest = await addCantinaGuest(nome);
+      if (newGuest) {
+        setRegistrations(prev => [newGuest, ...prev]);
+      }
+    } catch (err) {
+      alert('Erro ao adicionar cliente. Verifique sua conexão.');
+    }
+  };
+
   const filteredRegistrations = registrations.filter(reg => 
     reg.nome_completo.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -66,14 +80,23 @@ export default function CantinaTab() {
     <>
       <header className="admin-header">
         <h2>Módulo Cantina (Saldo Virtual)</h2>
-        <div className="search-bar">
-          <Search size={18} />
-          <input 
-            type="text" 
-            placeholder="Buscar campista..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            className="btn btn-primary" 
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#10b981', border: 'none' }}
+            onClick={handleAddGuest}
+          >
+            <UserPlus size={18} /> Novo Cliente Manual
+          </button>
+          <div className="search-bar" style={{ margin: 0 }}>
+            <Search size={18} />
+            <input 
+              type="text" 
+              placeholder="Buscar campista..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </div>
       </header>
       

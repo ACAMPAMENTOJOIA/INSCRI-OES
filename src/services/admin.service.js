@@ -154,6 +154,25 @@ export const updateCantinaBalance = async (id, saldo) => {
   return true;
 };
 
+export const addCantinaGuest = async (nome) => {
+  const dummyData = {
+    nome_completo: nome,
+    telefone: 'NA',
+    sexo: 'NA',
+    idade: 0,
+    is_cantina_only: true,
+    saldo_cantina: 0
+  };
+  
+  const { error, data } = await supabase
+    .from('registrations')
+    .insert([dummyData])
+    .select();
+    
+  if (error) throw error;
+  return data ? data[0] : null;
+};
+
 function getMockRegistrations() {
   return [{
     id: '1',

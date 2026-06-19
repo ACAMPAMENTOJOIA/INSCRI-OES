@@ -31,7 +31,8 @@ export default function RegistrationsTab() {
     const matchesSearch = reg.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           (reg.telefone && reg.telefone.includes(searchTerm));
     const matchesEvent = selectedEvent === '' || reg.event_id === selectedEvent;
-    return matchesSearch && matchesEvent;
+    const isNotCantinaOnly = !reg.is_cantina_only;
+    return matchesSearch && matchesEvent && isNotCantinaOnly;
   });
 
   const exportToPDF = () => {
