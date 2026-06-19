@@ -94,3 +94,10 @@ using ( bucket_id = 'event-covers' AND auth.role() = 'authenticated' );
 -- 4. Atualizações do Módulo Financeiro (Admin V2)
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS status_pagamento text DEFAULT 'Pendente';
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS valor_pago numeric(10, 2) DEFAULT 0;
+
+-- 5. Correção de Permissões (Permitir Admin atualizar pagamento)
+DROP POLICY IF EXISTS "Admins podem atualizar inscricoes" ON registrations;
+CREATE POLICY "Admins podem atualizar inscricoes" 
+  ON registrations 
+  FOR UPDATE 
+  USING (auth.role() = 'authenticated');
