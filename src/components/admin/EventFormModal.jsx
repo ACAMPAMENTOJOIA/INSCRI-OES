@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { createEvent } from '../../services/admin.service';
+import { useState, useEffect } from 'react';
+import { createEvent, updateEvent } from '../../services/admin.service';
 
-export default function EventFormModal({ onClose, onSuccess }) {
-  const [newEvent, setNewEvent] = useState({ title: '', date_description: '', speaker: '', price: '' });
+export default function EventFormModal({ onClose, onSuccess, initialData = null }) {
+  const [newEvent, setNewEvent] = useState(
+    initialData || { title: '', date_description: '', speaker: '', price: '' }
+  );
   const [coverFile, setCoverFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -10,12 +12,17 @@ export default function EventFormModal({ onClose, onSuccess }) {
     e.preventDefault();
     setUploading(true);
     try {
-      await createEvent(newEvent, coverFile);
-      alert('Evento cadastrado com sucesso!');
+      if (initialData) {
+        await updateEvent(initialData.id, newEvent, coverFile);
+        alert('Evento atualizado com sucesso!');
+      } else {
+        await createEvent(newEvent, coverFile);
+        alert('Evento cadastrado com sucesso!');
+      }
       onSuccess();
     } catch (error) {
-      console.error('Erro ao criar evento:', error);
-      alert('Erro ao criar evento. Verifique as configurações de Storage.');
+      console.error('Erro ao salvar evento:', error);
+      alert('Erro ao salvar evento. Verifique as configurações de Storage.');
     } finally {
       setUploading(false);
     }
@@ -25,7 +32,7 @@ export default function EventFormModal({ onClose, onSuccess }) {
     <div className="modal-overlay" onClick={() => !uploading && onClose()}>
       <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '500px' }}>
         <div className="modal-header">
-          <h3>Cadastrar Novo Evento</h3>
+          <h3>{initialData ? 'Editar Evento' : 'Cadastrar Novo Evento'}</h3>
           <button className="close-btn" onClick={onClose} disabled={uploading}>&times;</button>
         </div>
         <div className="modal-body">

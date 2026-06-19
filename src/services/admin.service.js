@@ -75,6 +75,60 @@ export const toggleEventStatus = async (id, currentStatus) => {
   return true;
 };
 
+export const deleteEvent = async (id) => {
+  const { error } = await supabase
+    .from('events')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+  return true;
+};
+
+export const updateEvent = async (id, eventData, coverFile) => {
+  let cover_url = eventData.cover_url;
+  
+  if (coverFile) {
+    const fileExt = coverFile.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `${fileName}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('event-covers')
+      .upload(filePath, coverFile);
+      
+    if (uploadError) throw uploadError;
+    
+    const { data: publicUrlData } = supabase.storage
+      .from('event-covers')
+      .getPublicUrl(filePath);
+      
+    cover_url = publicUrlData.publicUrl;
+  }
+
+  const { error } = await supabase
+    .from('events')
+    .update({ 
+      title: eventData.title,
+      date_description: eventData.date_description,
+      speaker: eventData.speaker,
+      price: eventData.price,
+      cover_url 
+    })
+    .eq('id', id);
+
+  if (error) throw error;
+  return true;
+};
+
+export const updatePaymentStatus = async (id, status) => {
+  const { error } = await supabase
+    .from('registrations')
+    .update({ status_pagamento: status })
+    .eq('id', id);
+  if (error) throw error;
+  return true;
+};
+
 function getMockRegistrations() {
   return [{
     id: '1',

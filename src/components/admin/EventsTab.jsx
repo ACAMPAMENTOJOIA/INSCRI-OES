@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { CalendarPlus } from 'lucide-react';
-import { fetchAllEvents, toggleEventStatus } from '../../services/admin.service';
+import { CalendarPlus, Edit2, Trash2, Power, PowerOff } from 'lucide-react';
+import { fetchAllEvents, toggleEventStatus, deleteEvent } from '../../services/admin.service';
 import EventFormModal from './EventFormModal';
 
 export default function EventsTab() {
   const [events, setEvents] = useState([]);
   const [showEventForm, setShowEventForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
 
   const loadEvents = async () => {
     const data = await fetchAllEvents();
@@ -17,10 +18,26 @@ export default function EventsTab() {
   }, []);
 
   const handleToggleActive = async (id, currentStatus) => {
-    const success = await toggleEventStatus(id, currentStatus);
-    if (success) {
-      loadEvents();
+    if (window.confirm(`Tem certeza que deseja ${currentStatus ? 'desativar' : 'ativar'} este evento?`)) {
+      const success = await toggleEventStatus(id, currentStatus);
+      if (success) {
+        loadEvents();
+      }
     }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('ALERTA: Tem certeza que deseja excluir DEFINITIVAMENTE este evento? Todas as inscrições atreladas a ele também serão excluídas!')) {
+      const success = await deleteEvent(id);
+      if (success) {
+        loadEvents();
+      }
+    }
+  };
+
+  const handleEdit = (ev) => {
+    setEditingEvent(ev);
+    setShowEventForm(true);
   };
 
   return (
@@ -62,9 +79,32 @@ export default function EventsTab() {
                     </span>
                   </td>
                   <td>
-                    <button className="btn-small" onClick={() => handleToggleActive(ev.id, ev.active)}>
-                      {ev.active ? 'Desativar' : 'Ativar'}
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        className="btn-small" 
+                        title={ev.active ? 'Desativar' : 'Ativar'}
+                        style={{ backgroundColor: ev.active ? '#ef4444' : '#10b981', padding: '0.4rem' }}
+                        onClick={() => handleToggleActive(ev.id, ev.active)}
+                      >
+                        {ev.active ? <PowerOff size={16} /> : <Power size={16} />}
+                      </button>
+                      <button 
+                        className="btn-small" 
+                        title="Editar Evento"
+                        style={{ backgroundColor: '#3b82f6', padding: '0.4rem' }}
+                        onClick={() => handleEdit(ev)}
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button 
+                        className="btn-small" 
+                        title="Excluir Evento"
+                        style={{ backgroundColor: '#1f2937', padding: '0.4rem' }}
+                        onClick={() => handleDelete(ev.id)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -80,9 +120,14 @@ export default function EventsTab() {
 
       {showEventForm && (
         <EventFormModal 
-          onClose={() => setShowEventForm(false)} 
+          initialData={editingEvent}
+          onClose={() => {
+            setShowEventForm(false);
+            setEditingEvent(null);
+          }} 
           onSuccess={() => {
             setShowEventForm(false);
+            setEditingEvent(null);
             loadEvents();
           }} 
         />
