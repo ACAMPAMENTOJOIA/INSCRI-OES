@@ -3,7 +3,7 @@ import { Search, Download, FileText } from 'lucide-react';
 import { fetchAllRegistrations, fetchAllEvents } from '../../services/admin.service';
 import RegistrationModal from './RegistrationModal';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 export default function RegistrationsTab() {
@@ -58,7 +58,7 @@ export default function RegistrationsTab() {
 
     doc.text(`Relatório de Inscrições: ${eventName}`, 14, 15);
     
-    doc.autoTable({
+    autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 20,
